@@ -1,0 +1,35 @@
+{
+  "name": "icsjs",
+  "version": "0.0.1",
+  "description": "Pure JavaScript implementation of RFC 5545 (iCalendar).",
+  "main": "lib/ics",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "mocha tests/"
+  },
+  "devDependencies": {
+    "mocha": "1.17.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/maxmouchet/ics.js.git"
+  },
+  "keywords": [
+    "ics",
+    "ical",
+    "icalendar",
+    "calendar",
+    "event",
+    "rfc",
+    "5545"
+  ],
+  "author": "Maxime Mouchet",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/maxmouchet/ics.js/issues"
+  },
+  "homepage": "https://github.com/maxmouchet/ics.js"
+}

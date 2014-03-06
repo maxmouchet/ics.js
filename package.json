@@ -8,10 +8,11 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "mocha tests/"
+    "test": "mocha tests/; mocha-phantomjs tests/test.html"
   },
   "devDependencies": {
-    "mocha": "1.17.x"
+    "mocha": "1.17.x",
+    "mocha-phantomjs": "3.3.x"
   },
   "repository": {
     "type": "git",

@@ -1,5 +1,7 @@
-var assert = require('assert');
-var iCalendar = require('../lib/ics.js');
+if (typeof module !== 'undefined' && module.exports) {
+  var assert = require('assert');
+  var iCalendar = require('../lib/ics.js');
+}
 
 describe('dataTypes', function() {
 

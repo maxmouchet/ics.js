@@ -5,3 +5,10 @@
 [![License](http://img.shields.io/badge/license-MIT-blue.svg)](#)
 
 Pure JavaScript implementation of RFC 5545 (iCalendar).
+
+## Overview
+
+### Goals
+- Being able to generate and fully parse iCal files.
+- Pure JavaScript (ES5, strict mode) with no runtime dependencies.
+- Node.js and browser compatibility.

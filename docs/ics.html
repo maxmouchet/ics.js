@@ -1,0 +1,2606 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>ics.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>ics.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <pre><code>ics.js <span class="hljs-number">0.0</span><span class="hljs-number">.1</span>  
+https:<span class="hljs-comment">//github.com/maxmouchet/ics.js  </span>
+(c) <span class="hljs-number">2014</span> Maxime Mouchet  
+ics.js may be freely distributed under the MIT license.  
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+<span class="hljs-pi">  'use strict'</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <h1 id="setup">Setup</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Setup code taken from <a href="http://underscorejs.org/docs/underscore.html">Underscore.js</a>.</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Establish the root object, <code>window</code> in the browser, or <code>exports</code> on the server.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> root = <span class="hljs-keyword">this</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Create the iCalendar object.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> iCalendar = {};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Export the iCalendar object for <strong>Node.js</strong>, with
+backwards-compatibility for the old <code>require()</code> API. If we’re in
+the browser, add <code>iCalendar</code> as a global object via a string identifier,
+for Closure Compiler “advanced” mode.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> exports !== <span class="hljs-string">'undefined'</span>) {
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> module !== <span class="hljs-string">'undefined'</span> &amp;&amp; module.exports) {
+      exports = module.exports = iCalendar;
+    }
+    exports.iCalendar = iCalendar;
+  } <span class="hljs-keyword">else</span> {
+    root.iCalendar = iCalendar;
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Current version.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.VERSION = <span class="hljs-string">'0.0.1'</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <h1 id="exceptions">Exceptions</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+  iCalendar.BadValueTypeException = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(message)</span> {</span>
+    <span class="hljs-keyword">this</span>.message = message;
+    <span class="hljs-keyword">this</span>.name = <span class="hljs-string">'BadValueTypeException'</span>;
+  };
+
+  iCalendar.InvalidDataTypeException = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(message)</span> {</span>
+    <span class="hljs-keyword">this</span>.message = message;
+    <span class="hljs-keyword">this</span>.name = <span class="hljs-string">'InvalidDataTypeException'</span>;
+  };
+
+  iCalendar.NotImplementedException = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">this</span>.name = <span class="hljs-string">'NotImplementedException'</span>;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <h1 id="data-types">Data Types</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+  iCalendar.dataTypes = {};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <h2 id="base-data-type">Base data type</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>This is the base data type for all the <em>Property Value Data Types</em> defined in <a href="https://tools.ietf.org/html/rfc5545#section-3.3">section 3.3</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.dataTypes.Base = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(type, data)</span> {</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">arguments</span>.length === <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span>;
+    <span class="hljs-keyword">this</span>._type = type;
+    <span class="hljs-keyword">this</span>.setData(data);
+  };
+
+  iCalendar.dataTypes.Base.prototype.setData = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> {</span>
+    <span class="hljs-keyword">this</span>.data = <span class="hljs-keyword">this</span>.validateData(data);
+  };
+
+  iCalendar.dataTypes.Base.prototype.validateData = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> {</span>
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> iCalendar.NotImplementedException();
+  };
+
+  iCalendar.dataTypes.Base.prototype.toString = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.data;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <h2 id="binary-type">Binary Type</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Implementation of the <code>BINARY</code> type defined in <a href="https://tools.ietf.org/html/rfc5545#section-3.3.1">section 3.3.1</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.dataTypes.Binary = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> {</span>
+    iCalendar.dataTypes.Base.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'BINARY'</span>, data);
+  };
+
+  iCalendar.dataTypes.Binary.prototype = <span class="hljs-built_in">Object</span>.create(iCalendar.dataTypes.Base.prototype);
+  iCalendar.dataTypes.Binary.prototype.constructor = iCalendar.dataTypes.Base;
+
+  iCalendar.dataTypes.Binary.prototype.validateData = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> {</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> data !== <span class="hljs-string">'string'</span>) {
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> iCalendar.InvalidDataTypeException(<span class="hljs-string">'Base64 string expected'</span>);
+    }
+
+    <span class="hljs-keyword">if</span> (! <span class="hljs-regexp">/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/</span>.test(data)) {
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> iCalendar.InvalidDataTypeException(<span class="hljs-string">'Base64 string expected'</span>);
+    }
+
+    <span class="hljs-keyword">return</span> data;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>iCalendar.dataTypes.Binary.from</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <h2 id="boolean-type">Boolean Type</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Implementation of the <code>BOOLEAN</code> type defined in <a href="https://tools.ietf.org/html/rfc5545#section-3.3.2">section 3.3.2</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.dataTypes.Boolean = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> {</span>
+    iCalendar.dataTypes.Base.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'BOOLEAN'</span>, data);
+  };
+
+  iCalendar.dataTypes.Boolean.prototype = <span class="hljs-built_in">Object</span>.create(iCalendar.dataTypes.Base.prototype);
+  iCalendar.dataTypes.Boolean.prototype.constructor = iCalendar.dataTypes.Base;
+
+  iCalendar.dataTypes.Boolean.prototype.validateData = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> {</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> data !== <span class="hljs-string">'string'</span>) {
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> iCalendar.InvalidDataTypeException(<span class="hljs-string">'String expected'</span>);
+    }
+
+    <span class="hljs-keyword">if</span> (data.toUpperCase() !== (<span class="hljs-string">'TRUE'</span> || <span class="hljs-string">'FALSE'</span>)) {
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> iCalendar.InvalidDataTypeException(<span class="hljs-string">'TRUE or FALSE expected'</span>);
+    }
+
+    <span class="hljs-keyword">return</span> data;
+  };
+
+  iCalendar.dataTypes.Boolean.fromBoolean = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(bool)</span> {</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> bool == <span class="hljs-string">'boolean'</span>) {
+      <span class="hljs-keyword">var</span> data = bool ? <span class="hljs-string">'TRUE'</span> : <span class="hljs-string">'FALSE'</span>;
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-keyword">this</span>(data);
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> iCalendar.InvalidDataTypeException(<span class="hljs-string">'Boolean expected'</span>);
+    }
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <h2 id="calendar-user-address-type">Calendar User Address Type</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>Implementation of the <code>CAL-ADDRESS</code> type defined in <a href="https://tools.ietf.org/html/rfc5545#section-3.3.3">section 3.3.3</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.dataTypes.CalAddress = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> {</span>
+    iCalendar.dataTypes.Base.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'CAL-ADDRESS'</span>, data);
+  };
+
+  iCalendar.dataTypes.CalAddress.prototype = <span class="hljs-built_in">Object</span>.create(iCalendar.dataTypes.Base.prototype);
+  iCalendar.dataTypes.CalAddress.prototype.constructor = iCalendar.dataTypes.Base;
+
+  iCalendar.dataTypes.CalAddress.prototype.validateData = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> {</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> data !== <span class="hljs-string">'string'</span>) {
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> iCalendar.InvalidDataTypeException(<span class="hljs-string">'String expected'</span>);
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>TODO: How to validate URIs ?    </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+    <span class="hljs-keyword">return</span> data;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <h2 id="date-type">Date Type</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>Implementation of the <code>DATE</code> type defined in <a href="https://tools.ietf.org/html/rfc5545#section-3.3.4">section 3.3.4</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.dataTypes.Date = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> {</span>
+    iCalendar.dataTypes.Base.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'DATE'</span>, data);
+  };
+
+  iCalendar.dataTypes.Date.prototype = <span class="hljs-built_in">Object</span>.create(iCalendar.dataTypes.Base.prototype);
+  iCalendar.dataTypes.Date.prototype.constructor = iCalendar.dataTypes.Base;
+
+  iCalendar.dataTypes.Date.prototype.validateData = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> {</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> data !== <span class="hljs-string">'string'</span>) {
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> iCalendar.InvalidDataTypeException(<span class="hljs-string">'String expected'</span>);
+    }
+
+    <span class="hljs-keyword">if</span> (! <span class="hljs-regexp">/^\d{8}$/</span>.test(data)) {
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> iCalendar.InvalidDataTypeException();
+    }
+
+    <span class="hljs-keyword">return</span> data;
+  };
+
+  iCalendar.dataTypes.Date.fromDate = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(date)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>TODO: Implement.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <h2 id="date-time-type">Date-Time Type</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>Implementation of the <code>DATE-TIME</code> type defined in <a href="https://tools.ietf.org/html/rfc5545#section-3.3.5">section 3.3.5</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.dataTypes.DateTime = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> {</span>
+    iCalendar.dataTypes.Base.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'DATE-TIME'</span>, data);
+  };
+
+  iCalendar.dataTypes.DateTime.prototype = <span class="hljs-built_in">Object</span>.create(iCalendar.dataTypes.Base.prototype);
+  iCalendar.dataTypes.DateTime.prototype.constructor = iCalendar.dataTypes.Base;
+
+  iCalendar.dataTypes.DateTime.prototype.validateData = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> {</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> data !== <span class="hljs-string">'string'</span>) {
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> iCalendar.InvalidDataTypeException(<span class="hljs-string">'String expected'</span>);
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>TODO: Implement.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> data;
+  };
+
+  iCalendar.dataTypes.DateTime.fromDate = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(date)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>TODO: LOCAL (Floating) OR UTC ??
+YYYYDDMM T HHMMSS Z</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">pad</span><span class="hljs-params">(number)</span> {</span>
+      <span class="hljs-keyword">if</span> ( number &lt; <span class="hljs-number">10</span> ) {
+        <span class="hljs-keyword">return</span> <span class="hljs-string">'0'</span> + number;
+      }
+      <span class="hljs-keyword">return</span> number;
+    }
+
+    <span class="hljs-keyword">var</span> data = date.getUTCFullYear() +
+        pad( date.getUTCMonth() + <span class="hljs-number">1</span> ) +
+        pad( date.getUTCDate() ) +
+        <span class="hljs-string">'T'</span> + pad( date.getUTCHours() ) +
+        pad( date.getUTCMinutes() ) +
+        pad( date.getUTCSeconds() ) +
+        <span class="hljs-string">'Z'</span>;
+
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-keyword">this</span>(data);
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <h2 id="duration-type">Duration Type</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <p>Implementation of the <code>DURATION</code> type defined in <a href="https://tools.ietf.org/html/rfc5545#section-3.3.6">section 3.3.6</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.dataTypes.Duration = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> {</span>
+    iCalendar.dataTypes.Base.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'DURATION'</span>, data);
+  };
+
+  iCalendar.dataTypes.Duration.prototype = <span class="hljs-built_in">Object</span>.create(iCalendar.dataTypes.Base.prototype);
+  iCalendar.dataTypes.Duration.prototype.constructor = iCalendar.dataTypes.Base;
+
+  iCalendar.dataTypes.Duration.prototype.validateData = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> {</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> data !== <span class="hljs-string">'string'</span>) {
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> iCalendar.InvalidDataTypeException(<span class="hljs-string">'String expected'</span>);
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <p>TODO: Add proper validation.</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p>if (! /^\d{8}$/.test(data)) {
+throw new iCalendar.InvalidDataTypeException();
+}</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+    <span class="hljs-keyword">return</span> data;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <h2 id="float-type">Float Type</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <p>Implementation of the <code>FLOAT</code> type defined in <a href="https://tools.ietf.org/html/rfc5545#section-3.3.7">section 3.3.7</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.dataTypes.Float = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> {</span>
+    iCalendar.dataTypes.Base.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'FLOAT'</span>, data);
+  };
+
+  iCalendar.dataTypes.Float.prototype = <span class="hljs-built_in">Object</span>.create(iCalendar.dataTypes.Base.prototype);
+  iCalendar.dataTypes.Float.prototype.constructor = iCalendar.dataTypes.Base;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              <h2 id="integer-type">Integer Type</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-46">&#182;</a>
+              </div>
+              <p>Implementation of the <code>Integer</code> type defined in <a href="https://tools.ietf.org/html/rfc5545#section-3.3.8">section 3.3.8</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.dataTypes.Integer = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> {</span>
+    iCalendar.dataTypes.Base.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'INTEGER'</span>, data);
+  };
+
+  iCalendar.dataTypes.Integer.prototype = <span class="hljs-built_in">Object</span>.create(iCalendar.dataTypes.Base.prototype);
+  iCalendar.dataTypes.Integer.prototype.constructor = iCalendar.dataTypes.Base;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-47">&#182;</a>
+              </div>
+              <h2 id="period-of-time-type">Period of Time Type</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-48">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-49">&#182;</a>
+              </div>
+              <p>Implementation of the <code>PERIOD</code> type defined in <a href="https://tools.ietf.org/html/rfc5545#section-3.3.9">section 3.3.9</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.dataTypes.Period = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> {</span>
+    iCalendar.dataTypes.Base.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'PERIOD'</span>, data);
+  };
+
+  iCalendar.dataTypes.Period.prototype = <span class="hljs-built_in">Object</span>.create(iCalendar.dataTypes.Base.prototype);
+  iCalendar.dataTypes.Period.prototype.constructor = iCalendar.dataTypes.Base;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-50">&#182;</a>
+              </div>
+              <h2 id="recurrence-rule-type">Recurrence Rule Type</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-51">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-51">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-52">&#182;</a>
+              </div>
+              <p>Implementation of the <code>RECUR</code> type defined in <a href="https://tools.ietf.org/html/rfc5545#section-3.3.10">section 3.3.10</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.dataTypes.Recur = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> {</span>
+    iCalendar.dataTypes.Base.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'RECUR'</span>, data);
+  };
+
+  iCalendar.dataTypes.Recur.prototype = <span class="hljs-built_in">Object</span>.create(iCalendar.dataTypes.Base.prototype);
+  iCalendar.dataTypes.Recur.prototype.constructor = iCalendar.dataTypes.Base;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-53">&#182;</a>
+              </div>
+              <h2 id="text-type">Text Type</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-54">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-54">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-55">&#182;</a>
+              </div>
+              <p>Implementation of the <code>TEXT</code> type defined in <a href="https://tools.ietf.org/html/rfc5545#section-3.3.11">section 3.3.11</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.dataTypes.Text = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> {</span>
+    iCalendar.dataTypes.Base.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'TEXT'</span>, data);
+  };
+
+  iCalendar.dataTypes.Text.prototype = <span class="hljs-built_in">Object</span>.create(iCalendar.dataTypes.Base.prototype);
+  iCalendar.dataTypes.Text.prototype.constructor = iCalendar.dataTypes.Base;
+
+  iCalendar.dataTypes.Text.prototype.validateData = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-56">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-56">&#182;</a>
+              </div>
+              <p>TODO: Implement.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> data;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-57">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-57">&#182;</a>
+              </div>
+              <h2 id="time-type">Time Type</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-58">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-58">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-59">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-59">&#182;</a>
+              </div>
+              <p>Implementation of the <code>TIME</code> type defined in <a href="https://tools.ietf.org/html/rfc5545#section-3.3.12">section 3.3.12</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.dataTypes.Time = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> {</span>
+    iCalendar.dataTypes.Base.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'TIME'</span>, data);
+  };
+
+  iCalendar.dataTypes.Time.prototype = <span class="hljs-built_in">Object</span>.create(iCalendar.dataTypes.Base.prototype);
+  iCalendar.dataTypes.Time.prototype.constructor = iCalendar.dataTypes.Base;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-60">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-60">&#182;</a>
+              </div>
+              <h2 id="uri-type">URI Type</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-61">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-61">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-62">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-62">&#182;</a>
+              </div>
+              <p>Implementation of the <code>URI</code> type defined in <a href="https://tools.ietf.org/html/rfc5545#section-3.3.13">section 3.3.13</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.dataTypes.URI = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> {</span>
+    iCalendar.dataTypes.Base.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'URI'</span>, data);
+  };
+
+  iCalendar.dataTypes.URI.prototype = <span class="hljs-built_in">Object</span>.create(iCalendar.dataTypes.Base.prototype);
+  iCalendar.dataTypes.URI.prototype.constructor = iCalendar.dataTypes.Base;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-63">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-63">&#182;</a>
+              </div>
+              <h2 id="utc-offset-type">UTC Offset Type</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-64">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-64">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-65">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-65">&#182;</a>
+              </div>
+              <p>Implementation of the <code>UTC-OFFSET</code> type defined in <a href="https://tools.ietf.org/html/rfc5545#section-3.3.14">section 3.3.14</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.dataTypes.UTCOffset = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> {</span>
+    iCalendar.dataTypes.Base.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'UTC-OFFSET'</span>, data);
+  };
+
+  iCalendar.dataTypes.UTCOffset.prototype = <span class="hljs-built_in">Object</span>.create(iCalendar.dataTypes.Base.prototype);
+  iCalendar.dataTypes.UTCOffset.prototype.constructor = iCalendar.dataTypes.Base;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-66">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-66">&#182;</a>
+              </div>
+              <h1 id="parameters">Parameters</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-67">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-67">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+  iCalendar.parameters = {};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-68">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-68">&#182;</a>
+              </div>
+              <h2 id="base-parameter">Base parameter</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-69">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-69">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+  iCalendar.parameters.Base = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name, value)</span> {</span>
+    <span class="hljs-keyword">this</span>._name = name;
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> value !== <span class="hljs-string">'undefined'</span>) { <span class="hljs-keyword">this</span>.setValue(value); }
+  };
+
+  iCalendar.parameters.Base.prototype.setValue = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value)</span> {</span>
+    <span class="hljs-keyword">this</span>.value = <span class="hljs-keyword">this</span>.validateValue(value);
+  };
+
+  iCalendar.parameters.Base.prototype.validateValue = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value)</span> {</span>
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> iCalendar.NotImplementedException();
+  };
+
+  iCalendar.parameters.Base.prototype.toString = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._name + <span class="hljs-string">'='</span> + <span class="hljs-keyword">this</span>.value;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-70">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-70">&#182;</a>
+              </div>
+              <h2 id="value-data-types-parameter">Value Data Types Parameter</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-71">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-71">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-72">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-72">&#182;</a>
+              </div>
+              <p>Implementation of the <code>VALUE</code> parameter defined in <a href="https://tools.ietf.org/html/rfc5545#section-3.2.20">section 3.2.20</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.parameters.Value = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value)</span> {</span>
+    iCalendar.parameters.Base.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'VALUE'</span>, value);
+  };
+
+  iCalendar.parameters.Value.prototype = <span class="hljs-built_in">Object</span>.create(iCalendar.parameters.Base.prototype);
+  iCalendar.parameters.Value.prototype.constructor = iCalendar.parameters.Base;
+
+  iCalendar.parameters.Value.prototype.validateValue = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value)</span> {</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> value !== <span class="hljs-string">'string'</span>) { <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> BadValueTypeException(); }
+    <span class="hljs-keyword">return</span> value;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-73">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-73">&#182;</a>
+              </div>
+              <h1 id="components">Components</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-74">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-74">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+  iCalendar.components = {};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-75">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-75">&#182;</a>
+              </div>
+              <h2 id="base-component">Base component</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-76">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-76">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+  iCalendar.components.Base = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name)</span> {</span>
+    <span class="hljs-keyword">this</span>._name = name;
+    <span class="hljs-keyword">this</span>.properties = [];
+  };
+
+  iCalendar.components.Base.prototype.addProperty = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(property)</span> {</span>
+    <span class="hljs-keyword">this</span>.properties.push(<span class="hljs-keyword">this</span>.validateProperty(property));
+  };
+
+  iCalendar.components.Base.prototype.validateProperty = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(property)</span> {</span>
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> iCalendar.NotImplementedException();
+  };
+
+  iCalendar.components.Base.prototype.removeProperty = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(property)</span> {</span>
+    <span class="hljs-keyword">var</span> index = <span class="hljs-keyword">this</span>.properties.indexOf(property);
+    <span class="hljs-keyword">if</span> (index &gt; -<span class="hljs-number">1</span>) { <span class="hljs-keyword">this</span>.properties.splice(index, <span class="hljs-number">1</span>); }
+  };
+
+  iCalendar.components.Base.prototype.toString = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">var</span> output = <span class="hljs-string">''</span>;
+
+    output += <span class="hljs-string">'BEGIN:'</span> + <span class="hljs-keyword">this</span>._name + <span class="hljs-string">'\n'</span>;
+
+    <span class="hljs-keyword">this</span>.properties.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(e, i, a)</span> {</span>
+      output += e.toString() + <span class="hljs-string">'\n'</span>;
+    });
+
+    output += <span class="hljs-string">'END:'</span> + <span class="hljs-keyword">this</span>._name + <span class="hljs-string">'\n'</span>;
+
+    <span class="hljs-keyword">return</span> output;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-77">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-77">&#182;</a>
+              </div>
+              <h2 id="event-component">Event Component</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-78">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-78">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-79">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-79">&#182;</a>
+              </div>
+              <p>Implementation of the <code>VEVENT</code> component defined in <a href="https://tools.ietf.org/html/rfc5545#section-3.6.1">section 3.6.1</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.components.Event = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    iCalendar.components.Base.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'VEVENT'</span>);
+  };
+
+  iCalendar.components.Event.prototype = <span class="hljs-built_in">Object</span>.create(iCalendar.components.Base.prototype);
+  iCalendar.components.Event.prototype.constructor = iCalendar.components.Base;
+
+  iCalendar.components.Event.prototype.validateProperty = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(property)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-80">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-80">&#182;</a>
+              </div>
+              <p>TODO: Implement.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> property;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-81">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-81">&#182;</a>
+              </div>
+              <h2 id="to-do-component">To-Do Component</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-82">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-82">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-83">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-83">&#182;</a>
+              </div>
+              <p>Implementation of the <code>VTODO</code> component defined in <a href="https://tools.ietf.org/html/rfc5545#section-3.6.2">section 3.6.2</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.components.Todo = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    iCalendar.components.Base.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'VTODO'</span>);
+  };
+
+  iCalendar.components.Todo.prototype = <span class="hljs-built_in">Object</span>.create(iCalendar.components.Base.prototype);
+  iCalendar.components.Todo.prototype.constructor = iCalendar.components.Base;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-84">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-84">&#182;</a>
+              </div>
+              <h2 id="journal-component">Journal Component</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-85">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-85">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-86">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-86">&#182;</a>
+              </div>
+              <p>Implementation of the <code>VJOURNAL</code> component defined in <a href="https://tools.ietf.org/html/rfc5545#section-3.6.3">section 3.6.3</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.components.Journal = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    iCalendar.components.Base.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'VJOURNAL'</span>);
+  };
+
+  iCalendar.components.Journal.prototype = <span class="hljs-built_in">Object</span>.create(iCalendar.components.Base.prototype);
+  iCalendar.components.Journal.prototype.constructor = iCalendar.components.Base;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-87">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-87">&#182;</a>
+              </div>
+              <h2 id="free-busy-component">Free/Busy Component</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-88">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-88">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-89">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-89">&#182;</a>
+              </div>
+              <p>Implementation of the <code>VFREEBUSY</code> component defined in <a href="https://tools.ietf.org/html/rfc5545#section-3.6.4">section 3.6.4</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.components.FreeBusy = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    iCalendar.components.Base.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'VFREEBUSY'</span>);
+  };
+
+  iCalendar.components.FreeBusy.prototype = <span class="hljs-built_in">Object</span>.create(iCalendar.components.Base.prototype);
+  iCalendar.components.FreeBusy.prototype.constructor = iCalendar.components.Base;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-90">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-90">&#182;</a>
+              </div>
+              <h2 id="time-zone-component">Time Zone Component</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-91">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-91">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-92">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-92">&#182;</a>
+              </div>
+              <p>Implementation of the <code>VTIMEZONE</code> component defined in <a href="https://tools.ietf.org/html/rfc5545#section-3.6.5">section 3.6.5</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.components.TimeZone = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    iCalendar.components.Base.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'VTIMEZONE'</span>);
+  };
+
+  iCalendar.components.TimeZone.prototype = <span class="hljs-built_in">Object</span>.create(iCalendar.components.Base.prototype);
+  iCalendar.components.TimeZone.prototype.constructor = iCalendar.components.Base;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-93">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-93">&#182;</a>
+              </div>
+              <h2 id="alarm-component">Alarm Component</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-94">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-94">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-95">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-95">&#182;</a>
+              </div>
+              <p>Implementation of the <code>VALARM</code> component defined in <a href="https://tools.ietf.org/html/rfc5545#section-3.6.6">section 3.6.6</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.components.Alarm = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    iCalendar.components.Base.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'VALARM'</span>);
+  };
+
+  iCalendar.components.Alarm.prototype = <span class="hljs-built_in">Object</span>.create(iCalendar.components.Base.prototype);
+  iCalendar.components.Alarm.prototype.constructor = iCalendar.components.Base;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-96">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-96">&#182;</a>
+              </div>
+              <h1 id="properties">Properties</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-97">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-97">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+  iCalendar.properties = {};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-98">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-98">&#182;</a>
+              </div>
+              <h2 id="base-property">Base property</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-99">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-99">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.properties.Base = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(name, value)</span> {</span>
+    <span class="hljs-keyword">this</span>._name = name;
+    <span class="hljs-keyword">this</span>.parameters = [];
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> value !== <span class="hljs-string">'undefined'</span>) { <span class="hljs-keyword">this</span>.setValue(value); }
+  };
+
+  iCalendar.properties.Base.prototype.setValue = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value)</span> {</span>
+    <span class="hljs-keyword">this</span>.value = <span class="hljs-keyword">this</span>.validateValue(value);
+  };
+
+  iCalendar.properties.Base.prototype.addParameter = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(parameter)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-100">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-100">&#182;</a>
+              </div>
+              <p>TODO: Validate parameter.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.parameters.push(parameter);
+  };
+
+  iCalendar.properties.Base.prototype.removeParameter = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(parameter)</span> {</span>
+    <span class="hljs-keyword">var</span> index = <span class="hljs-keyword">this</span>.parameters.indexOf(parameter);
+    <span class="hljs-keyword">if</span> (index &gt; -<span class="hljs-number">1</span>) { <span class="hljs-keyword">this</span>.parameters.splice(index, <span class="hljs-number">1</span>); }
+  };
+
+  iCalendar.properties.Base.prototype.toString = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">var</span> output = <span class="hljs-string">''</span>;
+
+    output += <span class="hljs-keyword">this</span>._name;
+
+    <span class="hljs-keyword">this</span>.parameters.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(e, i, a)</span> {</span>
+      output += <span class="hljs-string">';'</span> + e.toString();
+    });
+
+    output += <span class="hljs-string">':'</span> + <span class="hljs-keyword">this</span>.value.toString();
+
+    <span class="hljs-keyword">return</span> output;
+  };
+
+  iCalendar.properties.Base.prototype.validateValue = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value)</span> {</span>
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> iCalendar.NotImplementedException();
+  };
+
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">expectValueType</span><span class="hljs-params">(value, expectedType)</span> {</span>
+    <span class="hljs-keyword">if</span> (!(value <span class="hljs-keyword">instanceof</span> expectedType)) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-101">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-101">&#182;</a>
+              </div>
+              <p>TODO: Correctly display expectedType</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> iCalendar.BadValueTypeException(<span class="hljs-keyword">typeof</span> value + <span class="hljs-string">' provided. '</span> + expectedType + <span class="hljs-string">' was expected.'</span>);
+    }
+  }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-102">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-102">&#182;</a>
+              </div>
+              <h2 id="attachment-property">Attachment Property</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-103">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-103">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-104">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-104">&#182;</a>
+              </div>
+              <p>Implementation of the <code>ATTACH</code> property defined in <a href="https://tools.ietf.org/html/rfc5545#section-3.8.1.1">section 3.8.1.1</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.properties.Attachment = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value)</span> {</span>
+    iCalendar.properties.Base.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'ATTACH'</span>, value);
+  };
+
+  iCalendar.properties.Attachment.prototype = <span class="hljs-built_in">Object</span>.create(iCalendar.properties.Base.prototype);
+  iCalendar.properties.Attachment.prototype.constructor = iCalendar.properties.Base;
+
+  iCalendar.properties.Attachment.prototype.validateValue = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value)</span> {</span>
+    expectValueType(value, iCalendar.dataTypes.Binary);
+    <span class="hljs-keyword">return</span> value;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-105">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-105">&#182;</a>
+              </div>
+              <h2 id="categories-property">Categories Property</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-106">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-106">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-107">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-107">&#182;</a>
+              </div>
+              <p>Implementation of the <code>CATEGORIES</code> property defined in <a href="https://tools.ietf.org/html/rfc5545#section-3.8.1.2">section 3.8.1.2</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.properties.Categories = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value)</span> {</span>
+    iCalendar.properties.Base.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'CATEGORIES'</span>, value);
+  };
+
+  iCalendar.properties.Categories.prototype = <span class="hljs-built_in">Object</span>.create(iCalendar.properties.Base.prototype);
+  iCalendar.properties.Categories.prototype.constructor = iCalendar.properties.Base;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-108">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-108">&#182;</a>
+              </div>
+              <h2 id="classification-property">Classification Property</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-109">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-109">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-110">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-110">&#182;</a>
+              </div>
+              <p>Implementation of the <code>CLASS</code> property defined in <a href="https://tools.ietf.org/html/rfc5545#section-3.8.1.3">section 3.8.1.3</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.properties.Classification = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value)</span> {</span>
+    iCalendar.properties.Base.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'CLASS'</span>, value);
+  };
+
+  iCalendar.properties.Classification.prototype = <span class="hljs-built_in">Object</span>.create(iCalendar.properties.Base.prototype);
+  iCalendar.properties.Classification.prototype.constructor = iCalendar.properties.Base;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-111">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-111">&#182;</a>
+              </div>
+              <h2 id="comment-property">Comment Property</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-112">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-112">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-113">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-113">&#182;</a>
+              </div>
+              <p>Implementation of the <code>COMMENT</code> property defined in <a href="https://tools.ietf.org/html/rfc5545#section-3.8.1.4">section 3.8.1.4</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.properties.Comment = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value)</span> {</span>
+    iCalendar.properties.Base.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'COMMENT'</span>, value);
+  };
+
+  iCalendar.properties.Comment.prototype = <span class="hljs-built_in">Object</span>.create(iCalendar.properties.Base.prototype);
+  iCalendar.properties.Comment.prototype.constructor = iCalendar.properties.Base;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-114">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-114">&#182;</a>
+              </div>
+              <h2 id="summary-property">Summary Property</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-115">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-115">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-116">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-116">&#182;</a>
+              </div>
+              <p>Implementation of the <code>SUMMARY</code> property defined in <a href="https://tools.ietf.org/html/rfc5545#section-3.8.1.12">section 3.8.1.12</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.properties.Summary = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value)</span> {</span>
+    iCalendar.properties.Base.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'SUMMARY'</span>, value);
+  };
+
+  iCalendar.properties.Summary.prototype = <span class="hljs-built_in">Object</span>.create(iCalendar.properties.Base.prototype);
+  iCalendar.properties.Summary.prototype.constructor = iCalendar.properties.Base;
+
+  iCalendar.properties.Summary.prototype.validateValue = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value)</span> {</span>
+    expectValueType(value, iCalendar.dataTypes.Text);
+    <span class="hljs-keyword">return</span> value;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-117">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-117">&#182;</a>
+              </div>
+              <h2 id="date-time-end-property">Date-Time End Property</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-118">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-118">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-119">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-119">&#182;</a>
+              </div>
+              <p>Implementation of the <code>DTEND</code> property defined in <a href="https://tools.ietf.org/html/rfc5545#section-3.8.2.2">section 3.8.2.2</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.properties.DTEnd = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value)</span> {</span>
+    iCalendar.properties.Base.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'DTEND'</span>, value);
+  };
+
+  iCalendar.properties.DTEnd.prototype = <span class="hljs-built_in">Object</span>.create(iCalendar.properties.Base.prototype);
+  iCalendar.properties.DTEnd.prototype.constructor = iCalendar.properties.Base;
+
+  iCalendar.properties.DTEnd.prototype.validateValue = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value)</span> {</span>
+    expectValueType(value, iCalendar.dataTypes.DateTime);
+    <span class="hljs-keyword">return</span> value;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-120">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-120">&#182;</a>
+              </div>
+              <h2 id="date-time-start-property">Date-Time Start Property</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-121">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-121">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-122">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-122">&#182;</a>
+              </div>
+              <p>Implementation of the <code>DTSTART</code> property defined in <a href="https://tools.ietf.org/html/rfc5545#section-3.8.2.4">section 3.8.2.4</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.properties.DTStart = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value)</span> {</span>
+    iCalendar.properties.Base.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'DTSTART'</span>, value);
+  };
+
+  iCalendar.properties.DTStart.prototype = <span class="hljs-built_in">Object</span>.create(iCalendar.properties.Base.prototype);
+  iCalendar.properties.DTStart.prototype.constructor = iCalendar.properties.Base;
+
+  iCalendar.properties.DTStart.prototype.validateValue = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value)</span> {</span>
+    expectValueType(value, iCalendar.dataTypes.DateTime);
+    <span class="hljs-keyword">return</span> value;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-123">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-123">&#182;</a>
+              </div>
+              <h2 id="duration-property">Duration Property</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-124">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-124">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-125">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-125">&#182;</a>
+              </div>
+              <p>Implementation of the <code>DURATION</code> property defined in <a href="https://tools.ietf.org/html/rfc5545#section-3.8.2.5">section 3.8.2.5</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.properties.Duration = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value)</span> {</span>
+    iCalendar.properties.Base.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'DURATION'</span>, value);
+  };
+
+  iCalendar.properties.Duration.prototype = <span class="hljs-built_in">Object</span>.create(iCalendar.properties.Base.prototype);
+  iCalendar.properties.Duration.prototype.constructor = iCalendar.properties.Base;
+
+  iCalendar.properties.Duration.prototype.validateValue = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value)</span> {</span>
+    expectValueType(value, iCalendar.dataTypes.Duration);
+    <span class="hljs-keyword">return</span> value;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-126">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-126">&#182;</a>
+              </div>
+              <h2 id="unique-identifier-property">Unique Identifier Property</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-127">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-127">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-128">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-128">&#182;</a>
+              </div>
+              <p>Implementation of the <code>UID</code> property defined in <a href="https://tools.ietf.org/html/rfc5545#section-3.8.4.7">section 3.8.4.7</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.properties.UID = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-129">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-129">&#182;</a>
+              </div>
+              <p>UUID generation code from <a href="http://stackoverflow.com/a/2117523/1262501"><a href="http://stackoverflow.com/a/2117523/1262501">http://stackoverflow.com/a/2117523/1262501</a></a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> uuid = <span class="hljs-string">'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'</span>.replace(<span class="hljs-regexp">/[xy]/g</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(c)</span> {</span>
+      <span class="hljs-keyword">var</span> r = <span class="hljs-built_in">Math</span>.random()*<span class="hljs-number">16</span>|<span class="hljs-number">0</span>, v = c == <span class="hljs-string">'x'</span> ? r : (r&amp;<span class="hljs-number">0x3</span>|<span class="hljs-number">0x8</span>);
+      <span class="hljs-keyword">return</span> v.toString(<span class="hljs-number">16</span>);
+    });
+
+    <span class="hljs-keyword">var</span> value = <span class="hljs-keyword">new</span> iCalendar.dataTypes.Text(uuid);
+
+    iCalendar.properties.Base.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'UID'</span>, value);
+  };
+
+  iCalendar.properties.UID.prototype = <span class="hljs-built_in">Object</span>.create(iCalendar.properties.Base.prototype);
+  iCalendar.properties.UID.prototype.constructor = iCalendar.properties.Base;
+
+  iCalendar.properties.UID.prototype.validateValue = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value)</span> {</span>
+    expectValueType(value, iCalendar.dataTypes.Text);
+    <span class="hljs-keyword">return</span> value;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-130">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-130">&#182;</a>
+              </div>
+              <h2 id="date-time-stamp-property">Date-Time Stamp Property</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-131">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-131">&#182;</a>
+              </div>
+              
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-132">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-132">&#182;</a>
+              </div>
+              <p>Implementation of the <code>DTSTAMP</code> property defined in <a href="https://tools.ietf.org/html/rfc5545#section-3.8.7.2">section 3.8.7.2</a>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.properties.DTStamp = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">var</span> value = iCalendar.dataTypes.DateTime.fromDate(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>());
+    iCalendar.properties.Base.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'DTSTAMP'</span>, value);
+  };
+
+  iCalendar.properties.DTStamp.prototype = <span class="hljs-built_in">Object</span>.create(iCalendar.properties.Base.prototype);
+  iCalendar.properties.DTStamp.prototype.constructor = iCalendar.properties.Base;
+
+  iCalendar.properties.DTStamp.prototype.validateValue = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(value)</span> {</span>
+    expectValueType(value, iCalendar.dataTypes.DateTime);
+    <span class="hljs-keyword">return</span> value;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-133">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-133">&#182;</a>
+              </div>
+              <h1 id="icalendar-object">iCalendar Object</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-134">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-134">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+  iCalendar.Calendar = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">this</span>.properties = [];
+    <span class="hljs-keyword">this</span>.components = [];
+  };
+
+  iCalendar.Calendar.prototype.addProperty = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(property)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-135">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-135">&#182;</a>
+              </div>
+              <p>TODO: Validate.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.properties.push(property);
+  };
+
+  iCalendar.Calendar.prototype.removeProperty = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(property)</span> {</span>
+    <span class="hljs-keyword">var</span> index = <span class="hljs-keyword">this</span>.properties.indexOf(property);
+    <span class="hljs-keyword">if</span> (index &gt; -<span class="hljs-number">1</span>) { <span class="hljs-keyword">this</span>.properties.splice(index, <span class="hljs-number">1</span>); }
+  };
+
+  iCalendar.Calendar.prototype.addComponent = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(component)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-136">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-136">&#182;</a>
+              </div>
+              <p>TODO: Validate.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.components.push(component);
+  };
+
+  iCalendar.Calendar.prototype.removeComponent = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(component)</span> {</span>
+    <span class="hljs-keyword">var</span> index = <span class="hljs-keyword">this</span>.components.indexOf(component);
+    <span class="hljs-keyword">if</span> (index &gt; -<span class="hljs-number">1</span>) { <span class="hljs-keyword">this</span>.components.splice(index, <span class="hljs-number">1</span>); }
+  };
+
+  iCalendar.Calendar.prototype.toString = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">var</span> output = <span class="hljs-string">''</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-137">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-137">&#182;</a>
+              </div>
+              <p>TODO: CRLF ?</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    output += <span class="hljs-string">'BEGIN:VCALENDAR'</span> + <span class="hljs-string">'\n'</span>;
+    output += <span class="hljs-string">'VERSION:2.0'</span> + <span class="hljs-string">'\n'</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-138">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-138">&#182;</a>
+              </div>
+              <p>TODO: VALID FPI ?</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    output += <span class="hljs-string">'PRODID:-//maxmouchet/ics.js//NONSGML ics.js//EN'</span> + <span class="hljs-string">'\n'</span>;
+
+    <span class="hljs-keyword">this</span>.components.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(e, i, a)</span> {</span>
+      output += e.toString();
+    });
+
+    output += <span class="hljs-string">'END:VCALENDAR'</span>;
+
+    <span class="hljs-keyword">return</span> output;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-139">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-139">&#182;</a>
+              </div>
+              <h1 id="event-builder">Event builder</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-140">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-140">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+  iCalendar.EventBuilder = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">this</span>.event = <span class="hljs-keyword">new</span> iCalendar.components.Event();
+
+    <span class="hljs-keyword">this</span>.event.addProperty(<span class="hljs-keyword">new</span> iCalendar.properties.UID());
+    <span class="hljs-keyword">this</span>.event.addProperty(<span class="hljs-keyword">new</span> iCalendar.properties.DTStamp());
+  };
+
+  iCalendar.EventBuilder.prototype.setStartDate = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(startDate)</span> {</span>
+    <span class="hljs-keyword">var</span> dateTime = iCalendar.EventBuilder.createDate(startDate);
+
+    <span class="hljs-keyword">var</span> dtStart = <span class="hljs-keyword">new</span> iCalendar.properties.DTStart(dateTime);
+    dtStart.addParameter(<span class="hljs-keyword">new</span> iCalendar.parameters.Value(<span class="hljs-string">'DATE-TIME'</span>));
+
+    <span class="hljs-keyword">this</span>.event.addProperty(dtStart);
+  };
+
+  iCalendar.EventBuilder.prototype.setEndDate = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(endDate)</span> {</span>
+    <span class="hljs-keyword">var</span> dateTime = iCalendar.EventBuilder.createDate(endDate);
+
+    <span class="hljs-keyword">var</span> dtEnd = <span class="hljs-keyword">new</span> iCalendar.properties.DTEnd(dateTime);
+    dtEnd.addParameter(<span class="hljs-keyword">new</span> iCalendar.parameters.Value(<span class="hljs-string">'DATE-TIME'</span>));
+
+    <span class="hljs-keyword">this</span>.event.addProperty(dtEnd);
+  };
+
+  iCalendar.EventBuilder.prototype.setDuration = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(duration)</span> {</span>
+    <span class="hljs-keyword">this</span>.event.addProperty(
+      <span class="hljs-keyword">new</span> iCalendar.properties.Duration(
+        <span class="hljs-keyword">new</span> iCalendar.dataTypes.Duration(duration)
+      )
+    );
+  };
+
+  iCalendar.EventBuilder.prototype.setSummary = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(text)</span> {</span>
+    <span class="hljs-keyword">this</span>.event.addProperty(
+      <span class="hljs-keyword">new</span> iCalendar.properties.Summary(
+        <span class="hljs-keyword">new</span> iCalendar.dataTypes.Text(text)
+      )
+    );
+  };
+
+  iCalendar.EventBuilder.prototype.addAttachment = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(base64)</span> {</span>
+    <span class="hljs-keyword">var</span> attachment = <span class="hljs-keyword">new</span> iCalendar.properties.Attachment(
+      <span class="hljs-keyword">new</span> iCalendar.dataTypes.Binary(base64)
+    );
+
+    attachment.addParameter(<span class="hljs-keyword">new</span> iCalendar.parameters.Value(<span class="hljs-string">'BINARY'</span>));
+
+    <span class="hljs-keyword">this</span>.event.addProperty(attachment);
+  };
+
+  iCalendar.EventBuilder.prototype.getEvent = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-141">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-141">&#182;</a>
+              </div>
+              <p>TODO: Validate event. It has REQUIRED properties.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.event;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-142">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-142">&#182;</a>
+              </div>
+              <p>TODO: Better place ?</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  iCalendar.EventBuilder.createDate = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(date)</span> {</span>
+    <span class="hljs-keyword">var</span> dateTime;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-143">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-143">&#182;</a>
+              </div>
+              <p>TODO: Throw exception or do sth. when not valid.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">if</span> (date <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Date</span>) {
+      dateTime = iCalendar.dataTypes.DateTime.fromDate(date);
+    } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> date == <span class="hljs-string">'string'</span>) {
+      dateTime = <span class="hljs-keyword">new</span> iCalendar.dataTypes.DateTime(date);
+    }
+
+    <span class="hljs-keyword">return</span> dateTime;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-144">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-144">&#182;</a>
+              </div>
+              <h1 id="calendar-builder">Calendar builder</h1>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-145">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-145">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+  iCalendar.CalendarBuilder = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">this</span>.calendar = <span class="hljs-keyword">new</span> iCalendar.Calendar();
+  };
+
+  iCalendar.CalendarBuilder.prototype.addEvent = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(evt)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-146">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-146">&#182;</a>
+              </div>
+              <p>TODO: addComponent better ?</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.calendar.addComponent(evt);
+  };
+
+  iCalendar.CalendarBuilder.prototype.getCalendar = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.calendar;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-147">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-147">&#182;</a>
+              </div>
+              <p>var event1 = new iCalendar.EventBuilder();
+event1.setStartDate(new Date());
+event1.setDuration(‘PT1H0M0S’);
+event1.addAttachment(‘c2FsdXQ=’);
+event1.setSummary(‘Party !’);</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-148">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-148">&#182;</a>
+              </div>
+              <p>var calendar = new iCalendar.CalendarBuilder();
+calendar.addEvent(event1.getEvent());</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-149">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-149">&#182;</a>
+              </div>
+              <p>console.log(calendar.getCalendar().toString());</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-150">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-150">&#182;</a>
+              </div>
+              <p>TODO: moment.js integration ?</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>}).call(<span class="hljs-keyword">this</span>);</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

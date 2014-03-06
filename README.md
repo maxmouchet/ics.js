@@ -69,9 +69,11 @@ meeting.setDuration('PT1H0M0S');
 
 meeting.setSummary("Financial result's presentation");
 
+// Put that together in our calendar.
 var calendar = new iCalendar.CalendarBuilder();
 calendar.addEvent(party.getEvent());
 calendar.addEvent(meeting.getEvent());
 
+// And display it.
 console.log(calendar.getCalendar().toString());
 ```

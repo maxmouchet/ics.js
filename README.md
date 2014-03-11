@@ -41,9 +41,7 @@ You just have to include it in your HTML:
 ```html
 <script src="path/to/ics.js"></script>
 ```
-and it will automatically expose the `iCalendar` object:  
-
-[![DevTools screenshot](https://photos-3.dropbox.com/t/0/AABDQ89MqahZ5-_VkbHQBbbJFxm6V7Zz5Tg1a1qA1FA8VA/12/1765758/png/1024x768/3/1394121600/0/2/Screenshot%202014-03-06%2016.31.30.png/B1JDXwNRVofTWj9RQ3iY_HRL_IAwZZxDDYxMhJOneL4)](#)
+and it will automatically expose the `iCalendar` object.
 
 ## Usage
 

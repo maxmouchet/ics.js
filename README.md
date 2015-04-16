@@ -6,6 +6,8 @@
 
 Pure JavaScript implementation of RFC 5545 (iCalendar).
 
+**Project Status :** Paused. I may work on it later but I don't have the time for now. 
+
 ## Overview
 
 ### Goals
